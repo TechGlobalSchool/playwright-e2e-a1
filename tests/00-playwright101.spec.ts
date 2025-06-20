@@ -52,46 +52,50 @@ test.describe("Playwright 101", () => {
   //   // making sure code runs only after the Promise is fulfilled or rejected.
   //   await page.goto("https://www.techglobal-training.com/");
   // });
+
+  // Given('User navigates the {string}', async ({ page }) => {
+
+  // })
+
+  test("Playwright 101 -  Cucumber Syntax", async () => {
+    const browser = await chromium.launch();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    await page.goto("https://www.techglobal-training.com/");
+
+    await page.close();
+  });
+
+  test("Playwright 101 -  Browser Fixture", async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    await page.goto("https://www.techglobal-training.com/");
+
+    await page.close();
+  });
+
+  test("Playwright 101 -  Context Fixture", async ({ context }) => {
+    const page = await context.newPage();
+
+    await page.goto("https://www.techglobal-training.com/");
+
+    await page.close();
+  });
+
+  test("Playwright 101 -  Multiple Fixture", async ({
+    page,
+    browser,
+    context,
+  }) => {
+    // const page = await context.newPage()
+
+    await page.goto("https://www.techglobal-training.com/");
+
+    const newTab = await context.newPage();
+    await newTab.goto("https://www.google.com");
+
+    await page.close();
+  });
 });
-
-// Given('User navigates the {string}', async ({ page }) => {
-
-// })
-
-test('Playwright 101 -  Cucumber Syntax', async () => {
-  const browser = await chromium.launch()
-  const context = await browser.newContext()
-  const page = await context.newPage()
-
-  await page.goto('https://www.techglobal-training.com/')
-
-  await page.close()
-})
-
-test('Playwright 101 -  Browser Fixture', async ({ browser }) => {
-  const context = await browser.newContext()
-  const page = await context.newPage()
-
-  await page.goto('https://www.techglobal-training.com/')
-
-  await page.close()
-})
-
-test('Playwright 101 -  Context Fixture', async ({ context }) => {
-  const page = await context.newPage()
-
-  await page.goto('https://www.techglobal-training.com/')
-
-  await page.close()
-})
-
-test('Playwright 101 -  Multiple Fixture', async ({ page, browser, context }) => {
-  // const page = await context.newPage()
-
-  await page.goto('https://www.techglobal-training.com/')
-
-  const newTab = await context.newPage()
-  await newTab.goto('https://www.google.com')
-
-  await page.close()
-})
