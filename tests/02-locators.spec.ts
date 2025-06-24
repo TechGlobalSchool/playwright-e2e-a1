@@ -77,6 +77,10 @@ test.describe("Playwright Locators", () => {
 
     const unorderedList = page.locator("#unordered_list > li");
 
+    // for(let i = 0; i < await unorderedList.count(); i++) {
+    //   await unorderedList.nth(i).click();
+    // }
+    
     await unorderedList.first().click();
     await unorderedList.nth(1).click();
     await unorderedList.last().click();
@@ -113,7 +117,7 @@ test.describe("Playwright Locators", () => {
 
     await page.getByRole("button", { name: "Register " }).click();
 
-    await page.getByPlaceholder("Enter text here").fill("TechGlobal");
+    await page.getByPlaceholder("Enter text here").fill("TechGlobal"); // input[placeholder="Enter text here!"]
 
     const buttonsWrapper = page.locator('[data-identifier="Buttons"]');
 
@@ -128,7 +132,7 @@ test.describe("Playwright Locators", () => {
   test("filter() locator API", async ({ page }) => {
     await page.goto("https://www.techglobal-training.com/frontend");
     await page
-      .getByRole("link", { name: "HTML ELements", exact: true })
+      .getByRole("link", { name: "HTML Elements", exact: true })
       .click();
 
     const testingParagraph = page.locator("p").filter({ hasText: "testing" });
