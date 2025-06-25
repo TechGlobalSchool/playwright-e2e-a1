@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Playwright Actions 1', () => {
+test.describe('Playwright Actions 1 @Smoke', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto("https://www.techglobal-training.com/");
         // await page.locator('#dropdown-testing').hover(); // hover action
@@ -82,7 +82,7 @@ test.describe('Playwright Actions 2', () => {
         await page.getByRole('link', { name: 'Actions' }).click();
     });
 
-    test('Double click and right click', async ({ page }) => {
+    test('Double click and right click @Regression', async ({ page }) => {
         await page.locator('#right-click').click({ button: 'right' });
         await expect(page.locator('#right_click_result')).toBeVisible();
 
@@ -90,13 +90,13 @@ test.describe('Playwright Actions 2', () => {
         await expect(page.locator('#double_click_result')).toBeVisible();
     });
 
-    test('Drag and drop', async ({ page }) => {
+    test('Drag and drop @E2E', async ({ page }) => {
         await page.dragAndDrop('#drag_element', '#drop_element');
         await expect(page.getByText('An element dropped here!')).toBeVisible();
     });
 });
 
-test('Valid search on Wiki', async ({ page }) => {
+test('Valid search on Wiki @Regression', async ({ page }) => {
     const query = 'JavaScript';
     await page.goto('https://www.wikipedia.org/');
     await page.getByRole('searchbox', { name: 'Search Wikipedia' }).fill(query);
@@ -106,7 +106,7 @@ test('Valid search on Wiki', async ({ page }) => {
     await expect(page.getByRole('heading', { name: query }).locator('span')).toBeVisible();
 });
 
-test('Invalid search on Wiki', async ({ page }) => {
+test('Invalid search on Wiki @Smoke', async ({ page }) => {
     await page.goto('https://www.wikipedia.org/');
     await page.getByRole('searchbox', { name: 'Search Wikipedia' }).fill('asdaasfasfa');
     await page.getByRole('button', { name: 'Search' }).click();

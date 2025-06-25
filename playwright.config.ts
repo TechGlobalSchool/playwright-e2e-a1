@@ -15,7 +15,7 @@ export default defineConfig({
   timeout: 10000, // that means fail the test if it takes more than 10 seconds
   testDir: './tests',
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -24,7 +24,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { open:'never' }],
+    ['html', { open:'never', outputFolder: 'playwright-report' }],
+    ['json', { outputFile: 'playwright-report/test-results.json' }],
+    ['junit', { outputFile: 'playwright-report/test-results.xml'}],
     ['list']
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */

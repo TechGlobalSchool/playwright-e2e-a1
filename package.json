@@ -7,7 +7,8 @@
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
     "test:traceon": "npx playwright test --trace on",
-    "test:codegen": "npx playwright codegen"
+    "test:codegen": "npx playwright codegen",
+    "test:smoke": "npx playwright test --grep @Smoke"
   },
   "keywords": [],
   "author": "",
