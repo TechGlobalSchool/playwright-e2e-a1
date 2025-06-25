@@ -13,6 +13,9 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   timeout: 10000, // that means fail the test if it takes more than 10 seconds
+  expect: { // this will override global expect assertion timeout to be 7.5 seconds
+    timeout: 6000
+  },
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: false,
