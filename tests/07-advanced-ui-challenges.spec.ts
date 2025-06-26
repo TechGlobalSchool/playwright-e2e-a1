@@ -59,7 +59,7 @@ test.describe('Multiple Windows', () => {
         await page3.keyboard.press('Enter');
     });
 
-    test.only('Multiple tabs when a button/link clicked', async({ page }) => {
+    test('Multiple tabs when a button/link clicked', async({ page }) => {
         await page.goto('https://www.techglobal-training.com/');
 
         const [ newTab ] = await Promise.all([
@@ -79,3 +79,112 @@ test.describe('Multiple Windows', () => {
 });
 
 
+test.describe('Alerts | Dialogs', () => { 
+    test.beforeEach(async({ page }) => {
+        await page.goto("https://www.techglobal-training.com/");
+        await page.hover('#dropdown-testing');
+        await page.click('#frontend-option');
+        await page.getByRole('link', { name: 'Alerts' }).click();
+    });
+
+    test('Warrning Alert', async({ page }) => {
+        const alerts = page.locator('[id$="alert"]');
+
+        page.once('dialog', dialog => {
+            console.log(dialog.message()); // You are on TechGlobal Training application.
+            console.log(dialog.type()); // alert
+            dialog.accept();
+        });
+
+        // Your actions that triggers dialog
+        await alerts.first().click();
+        expect(await page.locator('#action').innerText()).toBe('You accepted warning by clicking OK.');
+    });
+
+    test('Confirmation Alert accept', async({ page }) => {
+        const alerts = page.locator('[id$="alert"]');
+
+        page.once('dialog', dialog => {
+            console.log(dialog.message()); // Would you like to stay on TechGlobal Training application?
+            console.log(dialog.type()); // confirm
+            dialog.accept();
+        });
+
+        // Your actions that triggers dialog
+        await alerts.nth(1).click();
+        expect(await page.locator('#action').innerText()).toBe('You confirmed the alert by clicking OK.');
+    });
+
+    test('Confirmation Alert reject', async({ page }) => {
+        const alerts = page.locator('[id$="alert"]');
+
+        page.once('dialog', dialog => {
+            console.log(dialog.message()); // Would you like to stay on TechGlobal Training application?
+            console.log(dialog.type()); // confirm
+            dialog.dismiss();
+        });
+
+        // Your actions that triggers dialog
+        await alerts.nth(1).click();
+        expect(await page.locator('#action').innerText()).toBe('You rejected the alert by clicking Cancel.');
+    });
+
+    test('Prompt Alert reject', async({ page }) => {
+        const alerts = page.locator('[id$="alert"]');
+
+        page.once('dialog', dialog => {
+            console.log(dialog.message()); // What would you like to say to TechGlobal?
+            console.log(dialog.type()); // prompt
+            dialog.dismiss();
+        });
+
+        // Your actions that triggers dialog
+        await alerts.last().click();
+        expect(await page.locator('#action').innerText()).toBe('You rejected the alert by clicking Cancel.');
+    });
+
+    test('Prompt Alert accept with no prompt', async({ page }) => {
+        const alerts = page.locator('[id$="alert"]');
+
+        page.once('dialog', dialog => {
+            console.log(dialog.message()); // What would you like to say to TechGlobal?
+            console.log(dialog.type()); // prompt
+            dialog.accept();
+        });
+
+        // Your actions that triggers dialog
+        await alerts.last().click();
+        expect(await page.locator('#action').innerText()).toBe('You entered "" in the alert and clicked OK.');
+    });
+
+    test('Prompt Alert accept with a prompt', async({ page }) => {
+        const alerts = page.locator('[id$="alert"]');
+
+        page.once('dialog', dialog => {
+            console.log(dialog.message()); // What would you like to say to TechGlobal?
+            console.log(dialog.type()); // prompt
+            dialog.accept('TechGlobal');
+        });
+
+        // Your actions that triggers dialog
+        await alerts.last().click();
+        expect(await page.locator('#action').innerText()).toBe('You entered "TechGlobal" in the alert and clicked OK.');
+    });
+
+    test('Accept all the alerts', async({ page }) => {
+        const alerts = page.locator('[id$="alert"]');
+
+        page.on('dialog', dialog => { // this will handle all the alerts that may pop up during the test execution
+            console.log(dialog.message()); 
+            console.log(dialog.type());
+            dialog.accept();
+        });
+
+        // Your actions that triggers dialog
+        for(let i = 0; i < await alerts.count(); i++) {
+            await alerts.nth(i).click();
+        }
+
+        //expect(await page.locator('#action').innerText()).toBe('You entered "TechGlobal" in the alert and clicked OK.');
+    });
+});
