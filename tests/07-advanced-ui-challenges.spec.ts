@@ -184,7 +184,5 @@ test.describe('Alerts | Dialogs', () => {
         for(let i = 0; i < await alerts.count(); i++) {
             await alerts.nth(i).click();
         }
-
-        //expect(await page.locator('#action').innerText()).toBe('You entered "TechGlobal" in the alert and clicked OK.');
     });
 });
