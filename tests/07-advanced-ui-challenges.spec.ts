@@ -1,19 +1,22 @@
 import { test, expect } from '@playwright/test';
 
+import fs from 'fs';
+import path from 'path';
+
 test.describe('IFrames', () => {
-    test.beforeEach(async({ page }) => {
+    test.beforeEach(async ({ page }) => {
         await page.goto("https://www.techglobal-training.com/");
         await page.hover('#dropdown-testing');
-        await page.click('#frontend-option')
+        await page.click('#frontend-option');
     });
 
-    test('IFrames 1', async({ page }) => {
+    test('IFrames 1', async ({ page }) => {
         await page.getByRole('link', { name: 'IFrames' }).click();
 
         const frame = page.locator('#form_frame');
 
-        const [ fname, lname ] = [ 'John', 'Doe' ];
-        
+        const [fname, lname] = ['John', 'Doe'];
+
         // IFrame actions
         await frame.contentFrame().getByRole('textbox', { name: 'Please enter your first name' }).fill(fname);
         await frame.contentFrame().getByRole('textbox', { name: 'Please enter your last name' }).fill(lname);
@@ -22,13 +25,13 @@ test.describe('IFrames', () => {
         await expect(page.locator('#result')).toContainText(`You entered: ${fname} ${lname}`);
     });
 
-    test('IFrames 2', async({ page }) => {
+    test('IFrames 2', async ({ page }) => {
         await page.getByRole('link', { name: 'IFrames' }).click();
 
         const frame = page.frameLocator('#form_frame');
 
-        const [ fname, lname ] = [ 'Alex', 'Smith' ];
-        
+        const [fname, lname] = ['Alex', 'Smith'];
+
         // IFrame actions
         await frame.locator('#first_name').fill(fname);
         await frame.locator('#last_name').fill(lname);
@@ -39,11 +42,11 @@ test.describe('IFrames', () => {
 });
 
 test.describe('Multiple Windows', () => {
-    test('Multiple tabs', async({ context }) => {
+    test('Multiple tabs', async ({ context }) => {
         test.slow();
         const page1 = await context.newPage();
         await page1.goto('https://www.techglobal-training.com/');
-        await page1.getByRole('link', {name: 'See Our Programs'}).click();
+        await page1.getByRole('link', { name: 'See Our Programs' }).click();
 
         await page1.close(); // close the tab
 
@@ -59,14 +62,14 @@ test.describe('Multiple Windows', () => {
         await page3.keyboard.press('Enter');
     });
 
-    test('Multiple tabs when a button/link clicked', async({ page }) => {
+    test('Multiple tabs when a button/link clicked', async ({ page }) => {
         await page.goto('https://www.techglobal-training.com/');
 
-        const [ newTab ] = await Promise.all([
+        const [newTab] = await Promise.all([
             page.waitForEvent('popup'),
-            page.getByRole('link', {name: 'See Our Programs'}).click()
+            page.getByRole('link', { name: 'See Our Programs' }).click()
         ]);
-        
+
         await expect(newTab.getByText('What do we offer?')).toBeVisible();
         await page.waitForTimeout(2000);
 
@@ -79,15 +82,15 @@ test.describe('Multiple Windows', () => {
 });
 
 
-test.describe('Alerts | Dialogs', () => { 
-    test.beforeEach(async({ page }) => {
+test.describe('Alerts | Dialogs', () => {
+    test.beforeEach(async ({ page }) => {
         await page.goto("https://www.techglobal-training.com/");
         await page.hover('#dropdown-testing');
         await page.click('#frontend-option');
         await page.getByRole('link', { name: 'Alerts' }).click();
     });
 
-    test('Warrning Alert', async({ page }) => {
+    test('Warrning Alert', async ({ page }) => {
         const alerts = page.locator('[id$="alert"]');
 
         page.once('dialog', dialog => {
@@ -101,7 +104,7 @@ test.describe('Alerts | Dialogs', () => {
         expect(await page.locator('#action').innerText()).toBe('You accepted warning by clicking OK.');
     });
 
-    test('Confirmation Alert accept', async({ page }) => {
+    test('Confirmation Alert accept', async ({ page }) => {
         const alerts = page.locator('[id$="alert"]');
 
         page.once('dialog', dialog => {
@@ -115,7 +118,7 @@ test.describe('Alerts | Dialogs', () => {
         expect(await page.locator('#action').innerText()).toBe('You confirmed the alert by clicking OK.');
     });
 
-    test('Confirmation Alert reject', async({ page }) => {
+    test('Confirmation Alert reject', async ({ page }) => {
         const alerts = page.locator('[id$="alert"]');
 
         page.once('dialog', dialog => {
@@ -129,7 +132,7 @@ test.describe('Alerts | Dialogs', () => {
         expect(await page.locator('#action').innerText()).toBe('You rejected the alert by clicking Cancel.');
     });
 
-    test('Prompt Alert reject', async({ page }) => {
+    test('Prompt Alert reject', async ({ page }) => {
         const alerts = page.locator('[id$="alert"]');
 
         page.once('dialog', dialog => {
@@ -143,7 +146,7 @@ test.describe('Alerts | Dialogs', () => {
         expect(await page.locator('#action').innerText()).toBe('You rejected the alert by clicking Cancel.');
     });
 
-    test('Prompt Alert accept with no prompt', async({ page }) => {
+    test('Prompt Alert accept with no prompt', async ({ page }) => {
         const alerts = page.locator('[id$="alert"]');
 
         page.once('dialog', dialog => {
@@ -157,7 +160,7 @@ test.describe('Alerts | Dialogs', () => {
         expect(await page.locator('#action').innerText()).toBe('You entered "" in the alert and clicked OK.');
     });
 
-    test('Prompt Alert accept with a prompt', async({ page }) => {
+    test('Prompt Alert accept with a prompt', async ({ page }) => {
         const alerts = page.locator('[id$="alert"]');
 
         page.once('dialog', dialog => {
@@ -171,18 +174,48 @@ test.describe('Alerts | Dialogs', () => {
         expect(await page.locator('#action').innerText()).toBe('You entered "TechGlobal" in the alert and clicked OK.');
     });
 
-    test('Accept all the alerts', async({ page }) => {
+    test('Accept all the alerts', async ({ page }) => {
         const alerts = page.locator('[id$="alert"]');
 
         page.on('dialog', dialog => { // this will handle all the alerts that may pop up during the test execution
-            console.log(dialog.message()); 
+            console.log(dialog.message());
             console.log(dialog.type());
             dialog.accept();
         });
 
         // Your actions that triggers dialog
-        for(let i = 0; i < await alerts.count(); i++) {
+        for (let i = 0; i < await alerts.count(); i++) {
             await alerts.nth(i).click();
         }
     });
 });
+
+test.describe('File Download & Upload', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto("https://www.techglobal-training.com/");
+        await page.hover('#dropdown-testing');
+        await page.click('#frontend-option');
+        await page.getByRole('link', { name: 'File Download & Upload' }).click();
+    });
+
+    test('File Download', async({ page }) => {
+
+        const [download] = await Promise.all([
+            page.waitForEvent('download'),
+            page.locator('#file_download').click()
+        ]);
+
+        const pathToSave = 'downloads/' + download.suggestedFilename();
+
+        await download.saveAs(pathToSave);
+
+        const downloadsDir = path.resolve(__dirname, '../downloads'); // /playwright-e2e-a1/downloads
+        const expectedFilePath = path.join(downloadsDir, 'SampleText.txt');
+
+        expect(fs.existsSync(expectedFilePath)).toBeTruthy();
+    });
+
+    test.only('File Upload', async({ page }) => {
+
+    });
+})
