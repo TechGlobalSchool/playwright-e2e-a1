@@ -215,7 +215,22 @@ test.describe('File Download & Upload', () => {
         expect(fs.existsSync(expectedFilePath)).toBeTruthy();
     });
 
-    test.only('File Upload', async({ page }) => {
+    test.only('File Upload happy path', async({ page }) => {
 
+        const files: string[] = ['downloads/hello.txt', 'downloads/hello.docx', 'downloads/hello.pdf'];
+
+        for(let i = 0; i < files.length; i++) {
+            await page.locator('#file_upload').setInputFiles(files[i]);
+            await page.locator('#file_submit').click();
+            files[i] = files[i].replace('downloads/', '');
+            await expect(page.locator('#result')).toHaveText(`You uploaded ${files[i]}`);
+        }
+    });
+
+    test('File Upload negative test', async({ page }) => {
+        await page.locator('#file_upload').setInputFiles('downloads/hello.js');
+        await page.locator('#file_submit').click();
+
+        await expect(page.locator('#result')).toHaveText('This file type is not allowed. You can try one of the .pdf .txt .pptx .docx .png .jpeg .jpg file types to upload.');
     });
 })
