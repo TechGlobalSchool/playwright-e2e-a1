@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Read environment variables from file.
@@ -13,10 +13,12 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   timeout: 10000, // that means fail the test if it takes more than 10 seconds
-  expect: { // this will override global expect assertion timeout to be 7.5 seconds
-    timeout: 6000
+  expect: {
+    // this will override global expect assertion timeout to be 7.5 seconds
+    timeout: 6000,
   },
-  testDir: './tests',
+  testDir: "./tests",
+  // globalSetup: 'tests/setup/global.setup.ts',
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -27,10 +29,10 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { open:'never', outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'playwright-report/test-results.json' }],
-    ['junit', { outputFile: 'playwright-report/test-results.xml'}],
-    ['list']
+    ["html", { open: "never", outputFolder: "playwright-report" }],
+    ["json", { outputFile: "playwright-report/test-results.json" }],
+    ["junit", { outputFile: "playwright-report/test-results.xml" }],
+    ["list"],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -38,15 +40,47 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-    headless: true
+    trace: "on-first-retry",
+    headless: true,
+    // storageState: './user-data/loginAuth.json'
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'Playwright Demo - Chrome',
-      use: { ...devices['Desktop Chrome'] },
+      name: "Playwright Demo - Chrome",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+      },
+    },
+
+    {
+      name: "setup",
+      testMatch: /global\.setup\.ts/,
+      teardown: 'teardown'
+    },
+
+    {
+      name: "teardown",
+      testMatch: /global\.teardown\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+        storageState: "./user-data/loginAuth.json",
+      },
+    },
+
+    {
+      name: "loggedIn",
+      // testDir: './regression',
+      testMatch: "**/12-globalSetup.spec.ts",
+      dependencies: ["setup"],
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+        storageState: "./user-data/loginAuth.json",
+      },
     },
 
     // {

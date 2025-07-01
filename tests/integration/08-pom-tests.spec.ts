@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { BasePage } from '../pages/BasePage';
-import { FrontendTestingPage } from '../pages/FrontendTestingPage';
-import { DynamicElementsPage } from '../pages/DynamicElementsPage';
+import { BasePage } from '../../pages/BasePage';
+import { FrontendTestingPage } from '../../pages/FrontendTestingPage';
+import { DynamicElementsPage } from '../../pages/DynamicElementsPage';
 
 test.describe('POM Tests', () => {
     let dynamicElementsPage: DynamicElementsPage;
