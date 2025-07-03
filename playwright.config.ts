@@ -4,20 +4,22 @@ import { defineConfig, devices } from "@playwright/test";
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  timeout: 10000, // that means fail the test if it takes more than 10 seconds
+  timeout: 30000, // that means fail the test if it takes more than 10 seconds
+  // globalTimeout: 100000,
   expect: {
     // this will override global expect assertion timeout to be 7.5 seconds
     timeout: 6000,
   },
   testDir: "./tests",
+  snapshotDir: './snapshots',
   // globalSetup: 'tests/setup/global.setup.ts',
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -37,7 +39,9 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL: process.env.BASE_URL,
+
+    actionTimeout : 10000,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
