@@ -1,0 +1,16 @@
+{
+  "newStudent": {
+    "DOB": "1990-01-01",
+    "EMAIL": "tgschool@gmail.com",
+    "FIRST_NAME": "Tech",
+    "LAST_NAME": "GlobalSchool",
+    "INSTRUCTOR_ID": 2
+  },
+  "updatedStudent": {
+    "DOB": "200-01-01",
+    "EMAIL": "updatedtgschool@gmail.com",
+    "FIRST_NAME": "updatedTech",
+    "LAST_NAME": "updatedGlobalSchool",
+    "INSTRUCTOR_ID": 2
+  }
+}
