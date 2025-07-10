@@ -1,4 +1,4 @@
-import oracledb from "oracledb";
+import oracledb, { outFormat } from "oracledb";
 
 const oracleDbConfig = {
   user: process.env.DB_USERNAME,
@@ -12,7 +12,13 @@ async function runQuery(query: string) {
   try {
     connection = await oracledb.getConnection(oracleDbConfig);
 
-    const result = await connection.execute(query);
+    const result = await connection.execute(
+      query,
+      [], // binding parameters
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT // <--- This will ensure that rows are returned as objects
+      }
+    );
 
     return result.rows;
   } catch (err) {
