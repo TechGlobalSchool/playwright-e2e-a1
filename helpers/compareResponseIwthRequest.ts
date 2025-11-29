@@ -13,7 +13,7 @@ import { expect } from "@playwright/test";
  * 
  * @throws Will throw an error if 'DOB' field in the response/db object is not in a recognized format.
  */
-function compareResponseWithrequest(response, request) {
+function compareResponseWithrequest(response: Record<string, unknown>, request: Record<string, unknown>) {
   for (const key in request) {
     let receivedString: string;
 

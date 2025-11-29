@@ -22,7 +22,7 @@ async function runQuery(query: string) {
 
     return result.rows;
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err instanceof Error ? err.message : String(err));
   } finally {
     if (connection) {
       await connection.close();
